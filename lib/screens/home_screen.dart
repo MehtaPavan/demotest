@@ -75,88 +75,92 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategoryDropdown() {
-    return Container(
-      height: 36,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade400),
-        borderRadius: BorderRadius.circular(20),
-        color: selectedCategory != 'All' ? Colors.grey.shade200 : Colors.transparent,
-      ),
-      child: PopupMenuButton<String>(
-        onSelected: (value) {
-          setState(() {
-            selectedCategory = value;
-            searchQuery = ''; // clear search on category change
-          });
-        },
-        position: PopupMenuPosition.under,
-        constraints: BoxConstraints(
-          minWidth: 200,
-          maxWidth: MediaQuery.of(context).size.width - 32,
-          maxHeight: 250,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        itemBuilder: (BuildContext context) {
-          List<PopupMenuEntry<String>> items = [];
-
-          // Add category items only
-          for (String category in categories) {
-            items.add(
-              PopupMenuItem<String>(
-                value: category,
-                child: Row(
-                  children: [
-                    if (selectedCategory == category)
-                      Icon(Icons.check, color: Colors.deepOrange, size: 16)
-                    else
-                      const SizedBox(width: 16),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        category.isNotEmpty
-                            ? category[0].toUpperCase() + category.substring(1)
-                            : category,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          return items;
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  selectedCategory == 'All'
-                      ? 'Select Category'
-                      : (selectedCategory.isNotEmpty
-                      ? selectedCategory[0].toUpperCase() + selectedCategory.substring(1)
-                      : selectedCategory),
-                  style: TextStyle(
-                    color: selectedCategory == 'All'
-                        ? Colors.grey.shade600
-                        : Colors.grey.shade800,
-                    fontSize: 14,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: Colors.grey.shade600,
-              ),
-            ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          height: 36,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade400),
+            borderRadius: BorderRadius.circular(20),
+            color: selectedCategory != 'All' ? Colors.grey.shade200 : Colors.transparent,
           ),
-        ),
-      ),
+          child: PopupMenuButton<String>(
+            onSelected: (value) {
+              setState(() {
+                selectedCategory = value;
+                searchQuery = ''; // clear search on category change
+              });
+            },
+            position: PopupMenuPosition.under,
+            constraints: BoxConstraints(
+              minWidth: constraints.maxWidth,
+              maxWidth: constraints.maxWidth,
+              maxHeight: 250,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            itemBuilder: (BuildContext context) {
+              List<PopupMenuEntry<String>> items = [];
+
+              // Add category items only
+              for (String category in categories) {
+                items.add(
+                  PopupMenuItem<String>(
+                    value: category,
+                    child: Row(
+                      children: [
+                        if (selectedCategory == category)
+                          Icon(Icons.check, color: Colors.deepOrange, size: 16)
+                        else
+                          const SizedBox(width: 16),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            category.isNotEmpty
+                                ? category[0].toUpperCase() + category.substring(1)
+                                : category,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              return items;
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      selectedCategory == 'All'
+                          ? 'Select Category'
+                          : (selectedCategory.isNotEmpty
+                          ? selectedCategory[0].toUpperCase() + selectedCategory.substring(1)
+                          : selectedCategory),
+                      style: TextStyle(
+                        color: selectedCategory == 'All'
+                            ? Colors.grey.shade600
+                            : Colors.grey.shade800,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.grey.shade600,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
