@@ -107,8 +107,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             itemBuilder: (BuildContext context) {
               List<PopupMenuEntry<String>> items = [];
-
-              // Add category items only
               for (String category in categories) {
                 items.add(
                   PopupMenuItem<String>(
@@ -133,7 +131,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               }
-
               return items;
             },
             child: Padding(
@@ -174,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       body: SafeArea(
         child: Column(
           children: [
@@ -238,8 +234,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Content area
             Expanded(
               child: isLoading
                   ? Padding(
