@@ -48,14 +48,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Product> get filteredProducts {
     if (searchQuery.isNotEmpty && searchQuery.length < 3) {
-      return products.where((product) =>
-      selectedCategory == 'All' ||
-          product.category == selectedCategory).toList();
+      return products
+          .where((product) =>
+              selectedCategory == 'All' || product.category == selectedCategory)
+          .toList();
     }
 
     return products.where((product) {
-      final matchesSearch = product.title.toLowerCase().contains(searchQuery.toLowerCase());
-      final matchesCategory = selectedCategory == 'All' || product.category == selectedCategory;
+      final matchesSearch =
+          product.title.toLowerCase().contains(searchQuery.toLowerCase());
+      final matchesCategory =
+          selectedCategory == 'All' || product.category == selectedCategory;
       return matchesSearch && matchesCategory;
     }).toList();
   }
@@ -82,7 +85,9 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade400),
             borderRadius: BorderRadius.circular(20),
-            color: selectedCategory != 'All' ? Colors.grey.shade200 : Colors.transparent,
+            color: selectedCategory != 'All'
+                ? Colors.grey.shade200
+                : Colors.transparent,
           ),
           child: PopupMenuButton<String>(
             onSelected: (value) {
@@ -118,7 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         Expanded(
                           child: Text(
                             category.isNotEmpty
-                                ? category[0].toUpperCase() + category.substring(1)
+                                ? category[0].toUpperCase() +
+                                    category.substring(1)
                                 : category,
                           ),
                         ),
@@ -140,8 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       selectedCategory == 'All'
                           ? 'Select Category'
                           : (selectedCategory.isNotEmpty
-                          ? selectedCategory[0].toUpperCase() + selectedCategory.substring(1)
-                          : selectedCategory),
+                              ? selectedCategory[0].toUpperCase() +
+                                  selectedCategory.substring(1)
+                              : selectedCategory),
                       style: TextStyle(
                         color: selectedCategory == 'All'
                             ? Colors.grey.shade600
@@ -167,105 +174,128 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ShopEase'),
-        backgroundColor: Colors.deepOrange,
-      ),
-      body: Column(
-        children: [
-          SearchBarWidget(
-            onSearch: (value) {
-              _handleSearch(value);
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-            child: Row(
-              children: [
-                ChoiceChip(
-                  label: const Text('All Categories'),
-                  selected: selectedCategory == 'All',
-                  onSelected: (selected) {
-                    if (selected) {
-                      setState(() {
-                        selectedCategory = 'All';
-                        searchQuery = ''; // clear search when selecting all categories
-                      });
-                    }
-                  },
-                  selectedColor: Colors.grey.shade200,
-                  backgroundColor: Colors.transparent,
-                  shape: StadiumBorder(
-                    side: BorderSide(
-                      color: selectedCategory == 'All' ? Colors.grey.shade600 : Colors.grey.shade400,
-                    ),
-                  ),
-                  labelStyle: TextStyle(
-                    color: selectedCategory == 'All' ? Colors.grey.shade800 : Colors.grey.shade600,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildCategoryDropdown(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: isLoading
-                ? Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Lottie.asset(
-                'assets/lottie/loading.json',
-                width: 300,
-                height: 300,
-                repeat: true,
-              ),
-            )
-                : filteredProducts.isEmpty
-                ? Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Lottie.asset(
-                    'assets/lottie/empty.json',
-                    repeat: true,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Oops!! This product is missing...',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
+      backgroundColor: Colors.grey.shade50,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Modern header section with search and filters
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
-            )
-                : GridView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: filteredProducts.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.75,
+              child: Column(
+                children: [
+                  SearchBarWidget(
+                    onSearch: (value) {
+                      _handleSearch(value);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      ChoiceChip(
+                        label: const Text('All Categories'),
+                        selected: selectedCategory == 'All',
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() {
+                              selectedCategory = 'All';
+                              searchQuery =
+                                  ''; // clear search when selecting all categories
+                            });
+                          }
+                        },
+                        selectedColor: Colors.grey.shade200,
+                        backgroundColor: Colors.transparent,
+                        shape: StadiumBorder(
+                          side: BorderSide(
+                            color: selectedCategory == 'All'
+                                ? Colors.grey.shade600
+                                : Colors.grey.shade400,
+                          ),
+                        ),
+                        labelStyle: TextStyle(
+                          color: selectedCategory == 'All'
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildCategoryDropdown(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              itemBuilder: (context, index) {
-                final product = filteredProducts[index];
-                return ProductItem(
-                  title: product.title,
-                  price: product.price.toString(),
-                  rating: product.rating.toString(),
-                  imageUrl: product.thumbnail,
-                );
-              },
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+
+            // Content area
+            Expanded(
+              child: isLoading
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Lottie.asset(
+                        'assets/lottie/loading.json',
+                        width: 300,
+                        height: 300,
+                        repeat: true,
+                      ),
+                    )
+                  : filteredProducts.isEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Lottie.asset(
+                                'assets/lottie/empty.json',
+                                repeat: true,
+                              ),
+                              const SizedBox(height: 16),
+                              const Text(
+                                'Oops!! This product is missing...',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : GridView.builder(
+                          padding: const EdgeInsets.all(20),
+                          itemCount: filteredProducts.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.75,
+                          ),
+                          itemBuilder: (context, index) {
+                            final product = filteredProducts[index];
+                            return ProductItem(
+                              title: product.title,
+                              price: product.price.toString(),
+                              rating: product.rating.toString(),
+                              imageUrl: product.thumbnail,
+                            );
+                          },
+                        ),
+            ),
+          ],
+        ),
       ),
     );
   }
